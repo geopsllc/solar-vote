@@ -1,1 +1,1 @@
-# Vote Monitoring Tool for Multiple Wallets on the Solar Network
+# Vote Monitoring Tool for the Solar Network
