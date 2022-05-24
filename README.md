@@ -1,2 +1,1 @@
-# solar-voter
-Vote Management Script for Multiple Wallets on the Solar Network
+# Vote Monitoring Tool for Multiple Wallets on the Solar Network
