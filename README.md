@@ -1,4 +1,4 @@
-# Multi-Address Vote Monitoring Tool for the Solar Network
+# Vote Monitoring Tool for the Solar Network
 
 ## Installation
 
