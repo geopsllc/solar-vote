@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=0.67, maximum-scale=3.0, minimum-scale=0.67">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate max-age=0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="-1" />
+  <meta http-equiv="refresh" content="60" />
+
+  <title>Votes</title>
+  
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.6.3/papaparse.js"></script>
+  <style> .table{margin: auto; width: 75%;} </style>
+
+</head>
+
+<body>
+
+<div class="container" id="main">
+
+<br>
+<h1><center><p class="text-info">Voting Dashboard</p></center></h1>
+
+</div>
+
+<script>
+
+    function arrayToTable(tableData) {
+        var table = $('<table class="table table-striped table-hover table-bordered" id="table"></table>');
+        var thead = $('<thead></thead>');
+        var tbody = $('<tbody></tbody>');
+        $(tableData).each(function (i, rowData) {
+            if ( i == 0 ) {
+                var row = $('<tr class="header"></tr>');
+            } else {
+                var row = $('<tr></tr>');
+            }
+            $(rowData).each(function (j, cellData) {
+                if ( i == 0 ) {
+                    row.append($('<th>'+cellData+'</th>'));
+                } else {
+                    if (j == 6 && cellData != "0") {
+                        row.append($('<td><span class="badge badge-pill badge-success">'+cellData+'</span></td>'));
+                    } else {
+                        row.append($('<td>'+cellData+'</td>'));
+                    }
+                }
+            });
+            if ( i == 0 ) {
+                thead.append(row);
+            } else {
+                tbody.append(row);
+            }
+            table.append(thead);
+            table.append(tbody);
+        });
+        return table;
+    }
+
+    $.ajax({
+        type: "GET",
+        url: "state.csv",
+        cache: false,
+        success: function (data) {
+            var div = document.getElementById("main");
+            $('div').append(arrayToTable(Papa.parse(data, {skipEmptyLines: true}).data));
+            $('div').append("<center>*Delegate info: name[rank][share]</center>");
+            $.ajax({
+                type: "GET",
+                url: "info.txt",
+                cache: false,
+                success: function (data) {
+                    var div = document.getElementById("main");
+                    $('div').append("<br><center>"+data+"</center>");
+                }
+            });
+        }
+    });
+
+</script>
+
+</body>
+
+</html>
