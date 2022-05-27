@@ -27,7 +27,7 @@ def cur_reward_get():
     delegate_votes = voted_delegate['data']['votes']
     delegate_rank = rank_get(voted_name, delegate_votes)
     if delegate_rank in range(1, int(active_delegates) + 1):
-        reward = int(address_balance) / int(delegate_votes) * 10800 / 53 * dynamic_rewards[str(delegate_rank)] * delegate_share_dict[voted_name] / 100 * (100 - devfund) / 100
+        reward = int(address_balance) / int(delegate_votes) * 10800 / int(active_delegates) * dynamic_rewards[str(delegate_rank)] * delegate_share_dict[voted_name] / 100 * (100 - devfund) / 100
     else:
         reward = 0
     return [voted_name, delegate_rank, reward]
@@ -41,7 +41,7 @@ def best_reward_get():
             total_votes = str(int(address_balance) + int(delegate_votes_dict[delegate]))
             new_rank = rank_get(delegate, total_votes)
             if new_rank in range(1, int(active_delegates) + 1):
-                new_reward = int(address_balance) / int(total_votes) * 10800 / 53 * dynamic_rewards[str(new_rank)] * delegate_share_dict[delegate] / 100 * (100 - devfund) / 100
+                new_reward = int(address_balance) / int(total_votes) * 10800 / int(active_delegates) * dynamic_rewards[str(new_rank)] * delegate_share_dict[delegate] / 100 * (100 - devfund) / 100
             else:
                 new_reward = 0
             if new_reward > temp_reward:
