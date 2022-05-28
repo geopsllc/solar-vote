@@ -13,12 +13,13 @@ def api_get(url):
     if (resp.status_code == 200):
         return resp.json()
     else:
+        print('Could not retrieve: ' + url)
         quit()
 
 def rank_get(name, votes):
     delegate_votes_temp = delegate_votes_dict.copy()
     delegate_votes_temp[name] = votes
-    if name != voted_name:
+    if name != voted_name and voted_name != '':
         delegate_votes_temp[voted_name] = str(int(delegate_votes_temp[voted_name]) - int(address_balance))
     sorted_votes = sorted(delegate_votes_temp.values(), key = int, reverse=True)
     return sorted_votes.index(votes)+1
@@ -87,9 +88,12 @@ for i in range(0, delegate_count):
 
 for name, address in addresses.items():
     address_data = api_get(api + '/wallets/' + address)
-    voted_delegate = api_get(api + '/delegates/' + address_data['data']['attributes']['vote'])
     address_balance = address_data['data']['balance']
-    voted_name = voted_delegate['data']['username']
+    if address_data['data']['attributes'].get('vote'):
+        voted_delegate = api_get(api + '/delegates/' + address_data['data']['attributes']['vote'])
+        voted_name = voted_delegate['data']['username']
+    else:
+        voted_name = ''
 
     if voted_name not in delegate_share_dict:
         cur_reward = ['N/A', 0, 0]
