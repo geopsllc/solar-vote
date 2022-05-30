@@ -1,5 +1,5 @@
 # List of disallowed delegates
-disallowed = ['phoenix', 'biz_classic']
+disallowed = ['phoenix', 'biz_classic', 'gangnam']
 
 # Additional restrictions for selecting delegates based on min/max share percent and payout interval
 min_share = 50

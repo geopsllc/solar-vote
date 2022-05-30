@@ -121,11 +121,11 @@ for name, address in addresses.items():
     total[2] = total[2] + best_reward[2]
     total[3] = total[3] + delta
 
-    print('Wallet:', name, '-> Balance:', round(int(address_balance)/atomic, 2), '-> Voting:', voting, '-> Daily:', round(cur_reward[2]/atomic, 2), '-> Best:', best, '-> Daily:', round(best_reward[2]/atomic, 2), '-> Gain:', str(delta))
+    print('Wallet:', name, '-> Balance:', f'{int(address_balance)/atomic:,.2f}', '-> Voting:', voting, '-> Daily:', round(cur_reward[2]/atomic, 2), '-> Best:', best, '-> Daily:', round(best_reward[2]/atomic, 2), '-> Gain:', str(delta))
     csv.write(name + ',' + str(round(int(address_balance)/atomic, 2)) + ',' + voting + ',' + str(round(cur_reward[2]/atomic, 2)) + ',' + best + ',' + str(round(best_reward[2]/atomic, 2)) + ',' + str(delta) + '\n')
 
-print('Wallet: Total', '-> Balance:', round(total[0]/atomic, 2), '-> Voting: All', '-> Daily:', round(total[1]/atomic, 2), '-> Best: All', '-> Daily:', round(total[2]/atomic, 2), '-> Gain:', total[3])
-csv.write('Total,' + str(round(total[0]/atomic, 2)) + ',All,' + str(round(total[1]/atomic, 2)) + ',All,' + str(round(total[2]/atomic, 2)) + ',' + str(total[3]) + '\n')
+print('Wallet: Total', '-> Balance:', f'{total[0]/atomic:,.2f}', '-> Voting: All', '-> Daily:', round(total[1]/atomic, 2), '-> Best: All', '-> Daily:', round(total[2]/atomic, 2), '-> Gain:', round(total[3], 3))
+csv.write('Total,' + str(round(total[0]/atomic, 2)) + ',All,' + str(round(total[1]/atomic, 2)) + ',All,' + str(round(total[2]/atomic, 2)) + ',' + str(round(total[3], 3)) + '\n')
 
 if 'final' in globals():
     print('Recommendation: Switch', final[0], 'vote from', final[1], 'to', final[2], 'and gain', final[3])
