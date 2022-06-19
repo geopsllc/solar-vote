@@ -20,4 +20,4 @@ addresses = {
 api = 'https://sxp.mainnet.sh/api'
 
 # Delegate Share API
-sapi = 'https://delegates.solar.org/api/delegates?limit=100'
+sapi = 'https://delegates.solar.org/api/delegates?limit=99999'
