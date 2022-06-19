@@ -65,7 +65,10 @@ share_data = api_get(sapi)
 network_data = api_get(api + '/node/configuration')
 active_delegates = network_data['data']['constants']['activeDelegates']
 delegate_data = api_get(api + '/delegates?limit=' + str(active_delegates+2))
-share_count = share_data['total']
+if share_data['total'] > share_data['perPage']:
+    share_count = share_data['perPage']
+else:
+    share_count = share_data['total']
 delegate_count = delegate_data['meta']['count']
 dynamic_rewards = network_data['data']['constants']['dynamicReward']['ranks']
 
