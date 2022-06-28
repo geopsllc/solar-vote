@@ -25,10 +25,9 @@ def rank_get(name, votes):
     return sorted_votes.index(votes)+1
 
 def cur_reward_get():
-    delegate_votes = voted_delegate['data']['votes']
-    delegate_rank = rank_get(voted_name, delegate_votes)
+    delegate_rank = rank_get(voted_name, voted_votes)
     if delegate_rank in range(1, int(active_delegates) + 1):
-        reward = int(address_balance) / int(delegate_votes) * 10800 / int(active_delegates) * dynamic_rewards[str(delegate_rank)] * delegate_share_dict[voted_name] / 100 * (100 - devfund) / 100
+        reward = int(address_balance) / int(voted_votes) * 10800 / int(active_delegates) * dynamic_rewards[str(delegate_rank)] * delegate_share_dict[voted_name] / 100 * (100 - devfund) / 100
     else:
         reward = 0
     return [voted_name, delegate_rank, reward]
@@ -91,8 +90,8 @@ for name, address in addresses.items():
     address_data = api_get(api + '/wallets/' + address)
     address_balance = address_data['data']['balance']
     if address_data['data']['attributes'].get('vote'):
-        voted_delegate = api_get(api + '/delegates/' + address_data['data']['attributes']['vote'])
-        voted_name = voted_delegate['data']['username']
+        voted_name = address_data['data']['attributes']['vote']
+        voted_votes = [x for x in delegate_data['data'] if x["username"] == voted_name][0]['votes']
     else:
         voted_name = ''
 
