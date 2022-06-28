@@ -91,7 +91,7 @@ for name, address in addresses.items():
     address_balance = address_data['data']['balance']
     if address_data['data']['attributes'].get('vote'):
         voted_name = address_data['data']['attributes']['vote']
-        voted_votes = [x for x in delegate_data['data'] if x["username"] == voted_name][0]['votes']
+        voted_votes = [x for x in delegate_data['data'] if x['username'] == voted_name][0]['votes']
     else:
         voted_name = ''
 
