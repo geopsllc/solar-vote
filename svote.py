@@ -71,14 +71,14 @@ dynamic_rewards = network_data['data']['constants']['dynamicReward']['ranks']
 
 if network_data['data']['constants'].get('devFund'):
     for address in network_data['data']['constants']['devFund']:
-        devfund = devfund + network_data['data']['constants']['devFund'][address]
+        devfund += network_data['data']['constants']['devFund'][address]
 
 for i in range(0, share_count):
     del_name = share_data['data'][i]['username']
     del_rank = share_data['data'][i]['rank']
     del_share = share_data['data'][i]['payout']
     del_interval = share_data['data'][i]['payout_interval']
-    if del_rank in range(1, int(active_delegates) + 3) and del_share in range(min_share, max_share +1) and del_interval in range(min_time, max_time +1) and del_name not in disallowed:
+    if del_rank in range(1, int(active_delegates) + 3) and del_share in range(min_share, max_share + 1) and del_interval in range(min_time, max_time + 1) and del_name not in disallowed:
         delegate_share_dict[del_name] = del_share
 
 delegate_share_dict['N/A'] = 0
@@ -116,10 +116,10 @@ for name, address in addresses.items():
         elif delta > final[3]:
             final = [name, cur_reward[0], best_reward[0], delta]
 
-    total[0] = total[0] + int(address_balance)
-    total[1] = total[1] + cur_reward[2]
-    total[2] = total[2] + best_reward[2]
-    total[3] = total[3] + delta
+    total[0] += int(address_balance)
+    total[1] += cur_reward[2]
+    total[2] += best_reward[2]
+    total[3] += delta
 
     print('Wallet:', name, '-> Balance:', f'{int(address_balance)/atomic:,.2f}', '-> Voting:', voting, '-> Daily:', round(cur_reward[2]/atomic, 2), '-> Best:', best, '-> Daily:', round(best_reward[2]/atomic, 2), '-> Gain:', str(delta))
     csv.write(name + ',' + str(round(int(address_balance)/atomic, 2)) + ',' + voting + ',' + str(round(cur_reward[2]/atomic, 2)) + ',' + best + ',' + str(round(best_reward[2]/atomic, 2)) + ',' + str(delta) + '\n')
