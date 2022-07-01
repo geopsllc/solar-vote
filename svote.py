@@ -84,16 +84,22 @@ delegate_share_dict['N/A'] = 0
 
 for i in range(0, delegate_count):
     del_name = delegate_data['data'][i]['username']
-    delegate_votes_dict[del_name] = delegate_data['data'][i]['votes']
+    delegate_votes_dict[del_name] = delegate_data['data'][i]['votesReceived']['votes']
 
 for name, address in addresses.items():
     address_data = api_get(api + '/wallets/' + address)
     address_balance = address_data['data']['balance']
-    if address_data['data']['attributes'].get('vote'):
-        voted_name = address_data['data']['attributes']['vote']
-        voted_votes = [x for x in delegate_data['data'] if x['username'] == voted_name][0]['votes']
-    else:
+    address_votes = address_data['data']['votingFor']
+    votes_len = len(address_votes)
+
+    if votes_len == 1:
+        voted_name = list(address_votes.keys())[0]
+        voted_votes = delegate_votes_dict[voted_name]
+    elif votes_len == 0:
         voted_name = ''
+    else:
+        print('Address', name, 'voting for more than 1 delegate!')
+        quit()
 
     if voted_name not in delegate_share_dict:
         cur_reward = ['N/A', 0, 0]
