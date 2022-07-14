@@ -6,6 +6,7 @@ Basic install:
 ```sh
 git clone https://github.com/geopsllc/solar-vote
 cd solar-vote
+bash install.sh
 nano config.py
 ```
 - change config.py to your liking
@@ -22,8 +23,14 @@ This is a Multi-Address Vote Monitoring Tool for the Solar Network.
 - Supports Solar Core v3+.
 - Requires Python 3.8 or above - native on Ubuntu 20.04.
 - You can use it in cli mode or bring up a web interface that refreshes every minute.
+- Does not support addresses voting for multiple delegates.
 
 ## Changelog
+
+### 0.2
+
+- logic rewrite to consider total rewards instead of per-address rewards
+- added async logic to speed up api queries
 
 ### 0.1
 

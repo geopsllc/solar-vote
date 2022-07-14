@@ -45,10 +45,14 @@
                 if ( i == 0 ) {
                     row.append($('<th>'+cellData+'</th>'));
                 } else {
-                    if (j == 1) {
+                    if (j == 0 && cellData.includes("➤")) {
+                        row.append($('<td><span class="badge badge-pill badge-success"><b>'+cellData+'</b></span></td>'));
+                    } else if (j == 1) {
                         row.append($('<td>'+parseFloat(cellData).toLocaleString()+'</td>'));
-                    } else if (j == 6 && cellData != "0") {
-                        row.append($('<td><span class="badge badge-pill badge-success">'+cellData+'</span></td>'));
+                    } else if (j == 6 && parseFloat(cellData) > 0) {
+                        row.append($('<td><span class="badge badge-pill badge-success"><b>+'+cellData+'</b></span></td>'));
+                    } else if (j == 6 && parseFloat(cellData) < 0) {
+                        row.append($('<td><span class="badge badge-pill badge-danger"><b>'+cellData+'</b></span></td>'));
                     } else {
                         row.append($('<td>'+cellData+'</td>'));
                     }
@@ -79,7 +83,7 @@
                 cache: false,
                 success: function (data) {
                     var div = document.getElementById("main");
-                    $('div').append("<br><center>"+data+"</center>");
+                    $('div').append("<h4><b><center>"+data+"</center></b>");
                 }
             });
         }
