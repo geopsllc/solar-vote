@@ -114,7 +114,10 @@ def address_reward(name):
             else:
                 old_rank = 0
 
-            old_rank_change = old_rank - current_ranks_dict[name]
+            if current_ranks_dict[name] <= int(active_delegates):
+                old_rank_change = old_rank - current_ranks_dict[name]
+            else:
+                old_rank_change = 0
 
             if new_rank in range(1, int(active_delegates) + 1) and (old_rank <= int(active_delegates) or old_rank_change == 0):
                 current_rewards_temp[name] = round(class_dict[name].balance / delegate_votes_temp[delegate] * 10800 / int(active_delegates) * dynamic_rewards[str(new_rank)] * delegate_share_dict[delegate] / 100 * (100 - devfund) / 100 / atomic, 3)
@@ -222,6 +225,10 @@ for name in addresses:
     if best_name == '':
         best_daily = round(current_rewards_dict[name], 2)
         best = new_vote + '[' + str(current_ranks_dict[name]) + ']' + '[' + str(delegate_share_dict[new_vote]) + '%]'
+        delta = 0
+    elif new_vote in disallowed:
+        best_daily = 0
+        best = new_vote + '[' + str(current_ranks_dict[name]) + ']' + '[0%]'
         delta = 0
     else:
         best_daily = round(class_dict[best_name].rewards_map[name], 2)
