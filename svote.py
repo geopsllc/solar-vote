@@ -146,7 +146,7 @@ def address_reward(name):
                     class_dict[name].set_total(current_total)
                     class_dict[name].set_rewards_map(current_rewards_dict)
                     class_dict[name].set_ranks_map(current_ranks_dict)
-                elif class_dict[name].total < temp_total:
+                elif class_dict[name].total < temp_total - 0.02:
                     class_dict[name].set_total(temp_total)
                     class_dict[name].set_rewards_map(current_rewards_temp)
                     class_dict[name].set_ranks_map(current_ranks_temp)
