@@ -134,7 +134,10 @@ def address_reward(name):
                     elif temp_name != name and class_dict[temp_name].voted_name not in {class_dict[name].voted_name, 'N/A'} and class_dict[temp_name].voted_name in delegate_share_dict:
                         temp_rank = sorted_votes.index(delegate_votes_temp[class_dict[temp_name].voted_name])+1
                         if temp_rank != current_ranks_temp[temp_name]:
-                            current_rewards_temp[temp_name] = round(class_dict[temp_name].balance / delegate_votes_temp[class_dict[temp_name].voted_name] * 10800 / int(active_delegates) * dynamic_rewards[str(temp_rank)] * delegate_share_dict[class_dict[temp_name].voted_name] / 100 * (100 - devfund) / 100 / atomic, 3)
+                            if temp_rank <= int(active_delegates):
+                                current_rewards_temp[temp_name] = round(class_dict[temp_name].balance / delegate_votes_temp[class_dict[temp_name].voted_name] * 10800 / int(active_delegates) * dynamic_rewards[str(temp_rank)] * delegate_share_dict[class_dict[temp_name].voted_name] / 100 * (100 - devfund) / 100 / atomic, 3)
+                            else:
+                                current_rewards_temp[temp_name] = 0
                             current_ranks_temp[temp_name] = temp_rank
 
                 temp_total = round(sum(current_rewards_temp.values()), 3)
