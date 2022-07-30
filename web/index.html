@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.6.3/papaparse.js"></script>
-  <style> .table{margin: auto; width: 80%;} </style>
+  <style> .table{margin: auto; width: auto;} </style>
 
 </head>
 
@@ -25,7 +25,7 @@
 
 <div class="container" id="main">
 
-<h1><center><p class="text-info">Voting Dashboard</p></center></h1>
+<h1><center><p class="text-info">Optimal Vote-Split Table</p></center></h1>
 
 </div>
 
@@ -36,29 +36,23 @@
         var thead = $('<thead></thead>');
         var tbody = $('<tbody></tbody>');
         $(tableData).each(function (i, rowData) {
-            if ( i == 0 ) {
-                var row = $('<tr class="header"></tr>');
+            if (i == 0) {
+                var row = $('<tr class="header" align="center"></tr>');
             } else {
                 var row = $('<tr></tr>');
             }
             $(rowData).each(function (j, cellData) {
-                if ( i == 0 ) {
+                if (i == 0) {
                     row.append($('<th>'+cellData+'</th>'));
                 } else {
-                    if (j == 0 && cellData.includes("➤")) {
-                        row.append($('<td><span class="badge badge-pill badge-success"><b>'+cellData+'</b></span></td>'));
-                    } else if (j == 1) {
-                        row.append($('<td>'+parseFloat(cellData).toLocaleString()+'</td>'));
-                    } else if (j == 6 && parseFloat(cellData) > 0) {
-                        row.append($('<td><span class="badge badge-pill badge-success"><b>+'+cellData+'</b></span></td>'));
-                    } else if (j == 6 && parseFloat(cellData) < 0) {
-                        row.append($('<td><span class="badge badge-pill badge-danger"><b>'+cellData+'</b></span></td>'));
+                    if (j == 2 || j == 3) {
+                        row.append($('<td align="right">'+parseFloat(cellData).toLocaleString(undefined, {minimumFractionDigits: 3})+'</td>'));
                     } else {
-                        row.append($('<td>'+cellData+'</td>'));
+                        row.append($('<td align="right">'+cellData+'</td>'));
                     }
                 }
             });
-            if ( i == 0 ) {
+            if (i == 0) {
                 thead.append(row);
             } else {
                 tbody.append(row);

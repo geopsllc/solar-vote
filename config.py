@@ -7,14 +7,11 @@ max_share = 99
 min_time = 1
 max_time = 24
 
-# Minimum total rewards gain to trigger recommendation, in number of coins
+# Minimum rewards gain to trigger recommendation, in number of coins
 gain = 0.5
 
-# Dictionary of addresses and their names in the format 'name':'address'
-addresses = {
-	'name1':'address1',
-        'name2':'address2'
-}
+# Voting address
+address = 'address'
 
 # Core API
 api = 'https://sxp.mainnet.sh/api'
