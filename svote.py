@@ -61,6 +61,10 @@ dynamic_rewards = network_data['data']['constants']['dynamicReward']['ranks']
 dynamic_rewards[str(int(active_delegates+1))] = 0
 dynamic_rewards[str(int(active_delegates+2))] = 0
 
+if address_balance <= atomic:
+    print('Address balance too low')
+    quit()
+
 if network_data['data']['constants'].get('devFund'):
     for wallet in network_data['data']['constants']['devFund']:
         devfund += network_data['data']['constants']['devFund'][wallet]
