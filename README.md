@@ -19,7 +19,7 @@ Frontend setup:
 ## General
 
 This is a Split-Vote Monitoring Tool for the Solar Network.
-- Supports Solar Core v3+.
+- Supports Solar Core v4+.
 - Requires Python 3.8 or above - native on Ubuntu 20.04.
 - You can use it in cli mode or bring up a web interface that refreshes every minute.
 - Calculates vote split for a single address.
