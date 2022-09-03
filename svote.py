@@ -30,7 +30,7 @@ def update_ranks():
 def update_rewards():
     for delegate in delegate_share_dict:
         if delegate_percent_dict[delegate] > 0:
-            delegate_rewards_dict[delegate] = round(percent_votes * delegate_percent_dict[delegate] / delegate_votes_dict[delegate] * 10800 / active_delegates * dynamic_rewards[str(delegate_ranks_dict[delegate])] * delegate_share_dict[delegate] / 100 * (100 - devfund) / 100)
+            delegate_rewards_dict[delegate] = round(percent_votes * delegate_percent_dict[delegate] / delegate_votes_dict[delegate] * 10800 / active_delegates * dynamic_rewards[str(delegate_ranks_dict[delegate])] * delegate_share_dict[delegate] / 100 * (100 - donations) / 100)
 
 # Main
 info = open('info.txt','w+')
@@ -43,7 +43,7 @@ delegate_rewards_dict = {}
 delegate_percent_dict = {}
 atomic = 100000000
 cur_reward = 0
-devfund = 0
+donations = 0
 
 share_data = api_get(sapi)
 address_data = api_get(api + '/wallets/' + address)
@@ -65,9 +65,9 @@ if address_balance <= atomic:
     print('Address balance too low')
     quit()
 
-if network_data['data']['constants'].get('devFund'):
-    for wallet in network_data['data']['constants']['devFund']:
-        devfund += network_data['data']['constants']['devFund'][wallet]
+if network_data['data']['constants'].get('donations'):
+    for wallet in network_data['data']['constants']['donations']:
+        donations += network_data['data']['constants']['donations'][wallet]
 
 for i in range(0, share_count):
     del_name = share_data['data'][i]['username']
@@ -94,7 +94,7 @@ if votes_len > 0:
         cur_rank = old_ranks_dict[delegate]
         delegate_votes_dict[delegate] -= balance
         if delegate in delegate_share_dict and cur_rank <= active_delegates:
-            cur_reward += round(balance / old_votes_dict[delegate] * 10800 / active_delegates * dynamic_rewards[str(cur_rank)] * delegate_share_dict[delegate] / 100 * (100 - devfund) / 100 / atomic, 3)
+            cur_reward += round(balance / old_votes_dict[delegate] * 10800 / active_delegates * dynamic_rewards[str(cur_rank)] * delegate_share_dict[delegate] / 100 * (100 - donations) / 100 / atomic, 3)
 
 update_ranks()
 
@@ -143,7 +143,7 @@ while percent_assigned < 100:
             delegate_percent_temp[delegate] += 1
             for x in delegate_share_dict:
                 if delegate_percent_temp[x] > 0:
-                    delegate_rewards_temp[x] = round(percent_votes * delegate_percent_temp[x] / delegate_votes_temp[x] * 10800 / active_delegates * dynamic_rewards[str(delegate_ranks_temp[x])] * delegate_share_dict[x] / 100 * (100 - devfund) / 100)
+                    delegate_rewards_temp[x] = round(percent_votes * delegate_percent_temp[x] / delegate_votes_temp[x] * 10800 / active_delegates * dynamic_rewards[str(delegate_ranks_temp[x])] * delegate_share_dict[x] / 100 * (100 - donations) / 100)
             old_total = sum(delegate_rewards_dict.values())
             new_total = sum(delegate_rewards_temp.values())
             new_reward = new_total - old_total

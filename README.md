@@ -26,6 +26,10 @@ This is a Split-Vote Monitoring Tool for the Solar Network.
 
 ## Changelog
 
+### 0.2
+
+- updated for Core 4.1
+
 ### 0.1
 
 - initial release
