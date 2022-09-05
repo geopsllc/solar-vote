@@ -67,7 +67,7 @@ if address_balance <= atomic:
 
 if network_data['data']['constants'].get('donations'):
     for wallet in network_data['data']['constants']['donations']:
-        donations += network_data['data']['constants']['donations'][wallet]
+        donations += network_data['data']['constants']['donations'][wallet]['percent']
 
 for i in range(0, share_count):
     del_name = share_data['data'][i]['username']
