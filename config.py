@@ -1,8 +1,8 @@
 # List of disallowed delegates
-disallowed = ['biz_classic', 'gangnam', 'cold', 'sxpmeme']
+disallowed = ['biz_classic', 'gangnam', 'cold', 'sxpmeme', 'doctordefi', 'schuan911']
 
 # Additional restrictions for selecting delegates based on min/max share percent and payout interval
-min_share = 65
+min_share = 50
 max_share = 99
 min_time = 1
 max_time = 24
