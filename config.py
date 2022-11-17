@@ -1,5 +1,5 @@
 # List of disallowed delegates
-disallowed = ['biz_classic', 'gangnam', 'cold', 'sxpmeme', 'doctordefi', 'schuan911', 'sxp']
+disallowed = ['biz_classic', 'gangnam', 'doctordefi', 'schuan911', 'sxp']
 
 # Additional restrictions for selecting delegates based on min/max share percent and payout interval
 min_share = 50
@@ -8,7 +8,7 @@ min_time = 1
 max_time = 24
 
 # Minimum rewards gain to trigger recommendation, in number of coins
-gain = 0.5
+gain = 1
 
 # Voting address
 address = 'address'

@@ -35,12 +35,14 @@ def update_rewards():
 # Main
 info = open('info.txt','w+')
 csv = open('state.csv','w+')
-csv.write('Delegate,Share,Votes,Daily\n')
+csv.write('Delegate,Share,Votes,Daily,APR\n')
 delegate_share_dict = {}
 delegate_votes_dict = {}
 delegate_ranks_dict = {}
 delegate_rewards_dict = {}
 delegate_percent_dict = {}
+vote_in = False
+to_vote = ''
 atomic = 100000000
 cur_reward = 0
 donations = 0
@@ -54,12 +56,13 @@ percent_assigned = 0
 votes_len = len(address_votes_dict)
 network_data = api_get(api + '/node/configuration')
 active_delegates = network_data['data']['constants']['activeDelegates']
-delegate_data = api_get(api + '/delegates?limit=' + str(active_delegates+2))
+delegate_data = api_get(api + '/delegates?limit=' + str(active_delegates+3))
 share_count = share_data['total']
 delegate_count = delegate_data['meta']['count']
 dynamic_rewards = network_data['data']['constants']['dynamicReward']['ranks']
 dynamic_rewards[str(int(active_delegates+1))] = 0
 dynamic_rewards[str(int(active_delegates+2))] = 0
+dynamic_rewards[str(int(active_delegates+3))] = 0
 
 if address_balance <= atomic:
     print('Address balance too low')
@@ -74,7 +77,7 @@ for i in range(0, share_count):
     del_rank = share_data['data'][i]['rank']
     del_share = share_data['data'][i]['payout']
     del_interval = share_data['data'][i]['payout_interval']
-    if del_rank in range(1, int(active_delegates) + 3) and del_share in range(min_share, max_share + 1) and del_interval in range(min_time, max_time + 1) and del_name not in disallowed:
+    if del_rank in range(1, int(active_delegates) + 4) and del_share in range(min_share, max_share + 1) and del_interval in range(min_time, max_time + 1) and del_name not in disallowed:
         delegate_share_dict[del_name] = del_share
         delegate_rewards_dict[del_name] = 0
         delegate_percent_dict[del_name] = 0
@@ -104,27 +107,48 @@ for delegate in delegate_ranks_dict:
         last_in = delegate
     elif del_rank == active_delegates + 1:
         first_out = delegate
+    elif del_rank == active_delegates + 2:
+        second_out = delegate
 
 first_vote_in = bool(delegate_votes_dict[last_in] < delegate_votes_dict[first_out] + address_balance)
+second_vote_in = bool(delegate_votes_dict[last_in] < delegate_votes_dict[second_out] + address_balance)
 
 if first_vote_in and first_out in delegate_share_dict:
     vote_in = True
     to_vote = first_out
     if last_in in address_votes_dict and last_in in delegate_share_dict:
-        if delegate_share_dict[last_in] > delegate_share_dict[first_out]:
+        if delegate_share_dict[last_in] > delegate_share_dict[first_out] and delegate_votes_dict[last_in] - delegate_votes_dict[first_out] < round(address_balance / 10):
             vote_in = False
-else:
-    vote_in = False
+
+if second_vote_in and second_out in delegate_share_dict:
+    if vote_in == False:
+        vote_in = True
+        to_vote = second_out
+        if last_in in address_votes_dict and last_in in delegate_share_dict:
+            if delegate_share_dict[last_in] > delegate_share_dict[second_out] and delegate_votes_dict[last_in] - delegate_votes_dict[second_out] < round(address_balance / 5):
+                vote_in = False
+    else:
+        if delegate_share_dict[second_out] >= delegate_share_dict[first_out]:
+            to_vote = second_out
 
 if vote_in:
-    to_assign = 0
-    while delegate_votes_dict[last_in] >= delegate_votes_dict[to_vote] + to_assign and percent_assigned < 100:
-        to_assign += percent_votes
+    if delegate_share_dict[to_vote] <= 70:
+        offset = 5
+    elif delegate_share_dict[to_vote] <= 75:
+        offset = 8
+    elif delegate_share_dict[to_vote] <= 80:
+        offset = 11
+    elif delegate_share_dict[to_vote] <= 85:
+        offset = 14
+    else:
+        offset = 17
+
+    while delegate_ranks_dict[to_vote] > active_delegates - offset and percent_assigned < 100:
+        delegate_votes_dict[to_vote] += percent_votes
+        update_ranks()
+        delegate_percent_dict[to_vote] += 1
+        update_rewards()
         percent_assigned += 1
-    delegate_votes_dict[to_vote] += to_assign
-    update_ranks()
-    delegate_percent_dict[to_vote] = percent_assigned
-    update_rewards()
 
 while percent_assigned < 100:
     temp_reward = 0
@@ -160,13 +184,17 @@ delegate_percent_final = {x:y for x,y in delegate_percent_dict.items() if y>0}
 delegate_rewards_final = {x:y for x,y in delegate_rewards_dict.items() if y>0}
 new_reward = round(sum(delegate_rewards_final.values()) / atomic, 3)
 
-print(f"{'Delegate':^30}", f"{'Share':^5}", f"{'Votes':^11}", f"{'Daily':^9}")
-for name, percent in delegate_percent_final.items():
+print(f"{'Delegate':^30}", f"{'Share':^7}", f"{'Votes':^11}", f"{'Daily':^9}", f"{'APR':^8}")
+for name, rewards in sorted(delegate_rewards_final.items(), key=lambda item: item[1]):
     delegate_info = name + '[' + str(delegate_ranks_dict[name]) + ']' + '[' + str(delegate_share_dict[name]) + '%]'
-    print(f"{delegate_info:>30}", f"{str(percent) + '%':>5}", f"{round(percent * percent_votes / atomic, 3):>11.3f}", f"{round(delegate_rewards_final[name] / atomic, 3):>9.3f}")
-    csv.write(delegate_info + ',' + str(percent) + '%,' + str(f"{round(percent * percent_votes / atomic, 3):.3f}") + ',' + str(f"{round(delegate_rewards_final[name] / atomic, 3):.3f}") + '\n')
-print(f"{'Total':^30}", f"{'100%':>5}", f"{round(address_balance / atomic, 3):>11.3f}", f"{new_reward:>9.3f}")
-csv.write('Total,100%,' + str(f"{round(address_balance / atomic, 3):.3f}") + ',' + str(f"{new_reward:.3f}") + '\n')
+    delegate_votes = delegate_percent_final[name] * percent_votes / atomic
+    delegate_rewards = rewards / atomic
+    delegate_apr = str(f"{delegate_rewards * 36500 / delegate_votes:.2f}") + '%'
+    total_apr = str(f"{new_reward * 36500 / (address_balance / atomic):.2f}") + '%'
+    print(f"{delegate_info:>30}", f"{str(delegate_percent_final[name]) + '%':>7}", f"{delegate_votes:>11,.3f}", f"{delegate_rewards:>9,.3f}", f"{delegate_apr:>8}")
+    csv.write(delegate_info + ',' + str(delegate_percent_final[name]) + '%,' + str(f"{delegate_votes:.3f}") + ',' + str(f"{delegate_rewards:.3f}") + ',' + delegate_apr + '\n')
+print(f"{'Total':^30}", f"{'100%':>7}", f"{address_balance / atomic:>11,.3f}", f"{new_reward:>9,.3f}", f"{total_apr:>8}")
+csv.write('Total,100%,' + str(f"{address_balance / atomic:.3f}") + ',' + str(f"{new_reward:.3f}") + ',' + total_apr + '\n')
 
 if new_reward > cur_reward + gain:
     print('Currently earning', f"{cur_reward:.3f}", 'SXP/d. Vote to gain', f"{new_reward - cur_reward:.3f}", 'SXP/d.')

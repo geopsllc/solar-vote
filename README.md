@@ -4,7 +4,7 @@
 
 Basic install:
 ```sh
-git clone https://github.com/geopsllc/solar-vote -b split-vote
+git clone https://github.com/geopsllc/solar-vote
 cd solar-vote
 nano config.py
 ```
@@ -25,6 +25,10 @@ This is a Split-Vote Monitoring Tool for the Solar Network.
 - Calculates vote split for a single address.
 
 ## Changelog
+
+### 0.3
+
+- updated logic and added APR
 
 ### 0.2
 
