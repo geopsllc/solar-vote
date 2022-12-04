@@ -18,3 +18,6 @@ api = 'https://sxp.mainnet.sh/api'
 
 # Delegate Share API
 sapi = 'https://delegates.solar.org/api/delegates?limit=99999'
+
+# Blacklisted Voters - Exchanges
+blacklisted = ['SPERNMNijYi2oJxBWPa2S12vNX71TV6coB']

@@ -26,6 +26,11 @@ This is a Split-Vote Monitoring Tool for the Solar Network.
 
 ## Changelog
 
+### 0.4
+
+- added globally blacklisted address list in the config
+- blacklisted address votes are now excluded from share rate calculations for all delegates
+
 ### 0.3
 
 - updated logic and added APR
